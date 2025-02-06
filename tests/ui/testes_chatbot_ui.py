@@ -9,6 +9,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 
+#Vai testar os campos de preencimento da tela 
+
 @pytest.fixture
 def driver():
     """Configura o WebDriver do Chrome e abre o chatbot"""
@@ -34,13 +36,13 @@ def test_preencher_campo_e_enviar(driver):
     input_box.send_keys("Qual é a capital do Brasil?")
     send_button.click()
     
-    time.sleep(1)  # Tempo para a resposta carregar
+    # Espera a resposta do chatbot
     resposta = WebDriverWait(driver, 5).until(
         EC.presence_of_element_located((By.CLASS_NAME, "chat-response"))
     ).text
 
     print(f"Resposta recebida: {resposta}")  # Debug
-    assert "Brasília" in resposta or "capital do Brasil" in resposta
+    assert "Brasília" in resposta or "capital do Brasil" in resposta, "A resposta não contém a capital do Brasil."
 
 @pytest.mark.skip(reason="Chatbot ainda não foi implementado")
 def test_enviar_com_enter(driver):
@@ -50,13 +52,13 @@ def test_enviar_com_enter(driver):
     input_box.send_keys("Como funciona a matrícula?")
     input_box.send_keys(Keys.RETURN)  # Pressiona ENTER
 
-    time.sleep(1)
+    # Espera a resposta do chatbot
     resposta = WebDriverWait(driver, 5).until(
         EC.presence_of_element_located((By.CLASS_NAME, "chat-response"))
     ).text
 
     print(f"Resposta recebida: {resposta}")  # Debug
-    assert "sistema de matrícula" in resposta or "matrícula" in resposta
+    assert "sistema de matrícula" in resposta or "matrícula" in resposta, "A resposta não contém informações sobre matrícula."
 
 @pytest.mark.skip(reason="Chatbot ainda não foi implementado")
 def test_placeholder_presente(driver):
@@ -65,7 +67,7 @@ def test_placeholder_presente(driver):
     placeholder = input_box.get_attribute("placeholder")
 
     print(f"Placeholder encontrado: {placeholder}")  # Debug
-    assert placeholder == "Digite sua pergunta..."
+    assert placeholder == "Digite sua pergunta...", f"Esperado 'Digite sua pergunta...', mas encontrado {placeholder}"
 
 @pytest.mark.skip(reason="Chatbot ainda não foi implementado")
 def test_mensagem_muito_longa(driver):
@@ -77,10 +79,11 @@ def test_mensagem_muito_longa(driver):
     input_box.send_keys(mensagem_longa)
     send_button.click()
 
-    time.sleep(1)
+    # Espera a mensagem ser enviada
     mensagem_enviada = WebDriverWait(driver, 5).until(
         EC.presence_of_element_located((By.CLASS_NAME, "user-message"))
     ).text
 
     print(f"Mensagem longa enviada: {mensagem_enviada}")
-    assert len(mensagem_enviada) >= 500  # Garantir que a mensagem não foi cortada
+    assert len(mensagem_enviada) >= 500, "A mensagem enviada não tem a quantidade de caracteres esperada."
+
