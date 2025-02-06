@@ -27,7 +27,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest selenium webdriver-manager
+          pip install pytest selenium webdriver-manager sqlalchemy
 
       - name: Configurar o Chrome para Selenium
         run: |
@@ -39,6 +39,9 @@ jobs:
 
       - name: Rodar os testes de interface (UI)
         run: pytest tests/ui --maxfail=1 --disable-warnings --tb=short
+
+      - name: Rodar os testes de banco de dados
+        run: pytest tests/db --maxfail=1 --disable-warnings --tb=short
 
       - name: Rodar os outros testes
         run: pytest tests/ --maxfail=1 --disable-warnings --tb=short
